@@ -145,7 +145,7 @@ public class FIFOCacheTest {
         assertEquals(queue.size(), cache.size());
     }
 
-    @Test
+@Test
     public void testContains() {
         FIFOCache<Integer> cache = new FIFOCache<>(3);
         Queue<Integer> queue = new LinkedList<>();
@@ -266,5 +266,55 @@ public class FIFOCacheTest {
         }
         assertFalse(cacheIterator.hasNext());
         assertFalse(queueIterator.hasNext());
+    }
+
+@Test
+    public void testIteratorHasNext() {
+        FIFOCache<Integer> cache = new FIFOCache<>(3);
+        cache.add(1);
+        cache.add(2);
+        cache.add(3);
+
+        Iterator<Integer> iterator = cache.iterator();
+        assertTrue(iterator.hasNext());
+        iterator.next();
+        assertTrue(iterator.hasNext());
+        iterator.next();
+        assertTrue(iterator.hasNext());
+        iterator.next();
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    public void testIteratorNext() {
+        FIFOCache<Integer> cache = new FIFOCache<>(3);
+        cache.add(1);
+        cache.add(2);
+        cache.add(3);
+
+        Iterator<Integer> iterator = cache.iterator();
+        assertEquals(1, iterator.next());
+        assertEquals(2, iterator.next());
+        assertEquals(3, iterator.next());
+    }
+
+    @Test
+    public void testIteratorNextThrowsException() {
+        FIFOCache<Integer> cache = new FIFOCache<>(3);
+        cache.add(1);
+        cache.add(2);
+
+        Iterator<Integer> iterator = cache.iterator();
+        iterator.next();
+        iterator.next();
+        assertThrows(NoSuchElementException.class, iterator::next);
+    }
+
+    @Test
+    public void testIteratorWithEmptyCache() {
+        FIFOCache<Integer> cache = new FIFOCache<>(3);
+        Iterator<Integer> iterator = cache.iterator();
+        assertFalse(iterator.hasNext());
+        assertThrows(NoSuchElementException.class, iterator::next);
     }
 }
